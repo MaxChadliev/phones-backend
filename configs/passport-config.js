@@ -1,4 +1,5 @@
 const passport = require("passport");
+// for passwords
 const bcrypt = require("bcrypt");
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -30,6 +31,7 @@ passport.use(
       passwordField: "loginPassword" // sent through AJAX from Angular
     },
     (theUsername, thePassword, next) => {
+      console.log("theUsername", theUsername)
       UserModel.findOne({ username: theUsername }, (err, userFromDb) => {
         if (err) {
           next(err);

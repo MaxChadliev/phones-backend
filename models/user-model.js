@@ -9,7 +9,8 @@ const UserSchema = new Schema({
         encryptedPassword: {
             type: String,
             required: true
-        }
+        },
+        role:{ type: String, enum:["store", "regular"], default:"regular" }
     },
     {
         timestamps: true

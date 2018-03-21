@@ -9,6 +9,7 @@ var session = require('express-session');
 var passport = require('passport');
 var cors = require('cors');
 
+// passport set up
 require('./configs/passport-config');
 
 mongoose.connect('mongodb://localhost/myTry')
@@ -36,6 +37,7 @@ app.use(session({
 // add passport stuff
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(
   cors({
     credentials: true,                 // allow other domains to send cookies

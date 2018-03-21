@@ -12,7 +12,7 @@ const myUploader = multer({
 
 
 // create new phone
-phoneRoutes.post('/api/phones/new', myUploader.single('phonePic'), (req, res, next) => {
+phoneRoutes.post('/api/phones', myUploader.single('phoneImage'), (req, res, next) => {
     if(!req.user){
         res.status(401).json({message: "Log in to create phone."});
         return;
@@ -23,13 +23,14 @@ phoneRoutes.post('/api/phones/new', myUploader.single('phonePic'), (req, res, ne
       color: req.body.phoneColor,
       owner: req.user._id
     });
+    
     if(req.file){
-        newPhone.image = '/uploads' + req.file.filename;
+        newPhone.image = '/uploads/' + req.file.filename;
     }
 
     newPhone.save((err) => {
         if(err){
-            res.status(500).json({message: "Some weird error from DB."});
+            res.status(500).json({message: "Error from DB."});
             return;
         }
         // validation errors
@@ -39,6 +40,7 @@ phoneRoutes.post('/api/phones/new', myUploader.single('phonePic'), (req, res, ne
             });
             return;
         }
+
         req.user.encryptedPassword = undefined;
         newPhone.user = req.user;
 
@@ -103,8 +105,11 @@ phoneRoutes.put('/api/phones/:id', (req, res, next) => {
         brand: req.body.phoneBrand,
         name: req.body.phoneName,
         color: req.body.phoneColor,
-        image: req.body.image    
+        // image: req.body.image    
     };
+    if(req.body.image){
+      updates.image = req.body.image;
+    }
 
   Phone.findByIdAndUpdate(req.params.id, updates, err => {
     if (err) {

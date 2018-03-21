@@ -29,7 +29,8 @@ authRoutes.post('/api/signup', (req, res, next) => {
         
         const theUser = new User({
            username: req.body.signUpUsername,
-           encryptedPassword: scrambledPassword 
+           encryptedPassword: scrambledPassword,
+           role:req.body.signUpRole
         });
         theUser.save((err)=> {
             if(err){
@@ -42,8 +43,9 @@ authRoutes.post('/api/signup', (req, res, next) => {
                     res.status(500).json({message: "Login went bad."});
                     return;
                 }
+                
                 // Clear the encryptedPassword before sending
-                  // (not from the database, just from the object)
+                // (not from the database, just from the object)
                 theUser.encryptedPassword = undefined;
 
                 // Send the user's information to the frontend
@@ -96,13 +98,15 @@ authRoutes.get("/api/checklogin", (req, res, next) => {
     res.status(200).json(req.user);
     return;
   }
-
-  // Clear the encryptedPassword before sending
-  // (not from the database, just from the object)
+  res.status(401).json({ message: "Unauthorized." });
+// Clear the encryptedPassword before sending
+// (not from the database, just from the object)
+//   if(req.user){
+//     res.status(200).json(req.user);
+//     return;
+//    }
 //   req.user.encryptedPassword = undefined;
-
 //   res.status(200).json(req.user);
-res.status(401).json({ message: "Unauthorized." });
 });
 
 function gtfoIfNotLogged(req, res, next) {
